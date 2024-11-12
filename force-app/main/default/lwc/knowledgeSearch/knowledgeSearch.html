@@ -1,0 +1,91 @@
+<!--
+  @description       : 
+  @author            : Vanitha Ravi & Geetha Priya
+  @group             : 
+  @last modified on  : 03-25-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <lightning-card title="Knowledge Search" icon-name="standard:knowledge">
+     
+            <!--Layout 1-->
+            <lightning-layout>  
+
+                <!--Record Type -->
+                <lightning-layout-item padding="around-small" size="6">
+                    <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="record-types">Record Types</label>
+                        <div class="slds-form-element__control"> 
+                            <div class="slds-select_container">
+                                <select class="slds-select" id="record-types" onchange={handleCible}>
+                                    <option value="All" selected>All</option>
+                                        <template for:each={rtList} for:item="r" for:index='index'>
+                                            <option key={r} value={r}>{r}</option>    
+                                        </template>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </lightning-layout-item>
+                <!--Search-->
+                <lightning-layout-item padding="around-small" size="6" >
+                        <div>
+                            <lightning-input label="Search" onchange={changeHandler}></lightning-input>
+                        </div>
+                </lightning-layout-item>
+
+           </lightning-layout>
+           
+
+<!--Article Search Result-->
+    <template if:true={articleList} >
+        <lightning-layout> <!--display no. of article found based on search,if articles present in articleList-->
+            <lightning-layout-item padding="around-small" class="adjust-padding">
+              <p style="font-size: 15px; font-weight:bold;"> {articleList.length} article(s) found</p> 
+            </lightning-layout-item>
+        </lightning-layout>
+    </template>
+
+<!-- Layout 2-->
+            <lightning-layout style="padding-bottom: 25px; padding-left: 25px; font-weight:bold; ">
+                <lightning-layout-item class="data-list" >
+                    <div class="data-list adjust-padding">
+                        <template for:each={articleList} for:item="a">
+                           <div key={a.data.Id} class="radio-item">
+                              <lightning-input 
+                                      type="radio" 
+                                      name="article" 
+                                      value={a.data.Id} 
+                                      label={a.data.Title} 
+                                      onchange={handleArticleClick}>
+                              </lightning-input>
+                          </div>
+                       </template>
+                       <template if:false={articleList}><i>No articles found.</i></template>
+                    </div>
+                </lightning-layout-item>
+            </lightning-layout>        
+
+<!--View Article (Opens Modal)-->
+            <lightning-layout>
+                <lightning-layout-item class="slds-align_absolute-center" >
+                     <lightning-button 
+                        variant="brand" 
+                        label="View Article" 
+                        onclick={handleModalView} 
+                        >
+                     </lightning-button>
+                </lightning-layout-item>
+                    <template if:true={showModal}>
+                      <c-modal-popup 
+                          selected-article-title={selectedArticleTitle} 
+                          ans-field-value={ansFieldValue}   
+                          record-id={recordId}
+                          oncontentdocumentid={handleContentDocument}                 
+                          oncancel={handleCancel}
+                         >                    
+                        </c-modal-popup>
+                    </template>
+            </lightning-layout>
+</lightning-card>
+</template>
